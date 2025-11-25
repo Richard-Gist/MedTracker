@@ -16,6 +16,7 @@ let package = Package(
     dependencies: [
         .package(path: "Vendor/swift-win32"),
         .package(url: "https://github.com/AparokshaUI/adwaita-swift", from: "0.1.0"),
+        .package(url: "https://github.com/swhitty/FlyingFox.git", from: "0.14.0"),
     ],
     targets: [
         .target(
@@ -45,6 +46,14 @@ let package = Package(
             name: "MedTrackerCLI",
             dependencies: ["MedTrackerCore"],
             path: "Sources/MedTrackerCLI"
+        ),
+        .executableTarget(
+            name: "MedTrackerServer",
+            dependencies: [
+                "MedTrackerCore",
+                .product(name: "FlyingFox", package: "FlyingFox")
+            ],
+            path: "Sources/MedTrackerServer"
         ),
     ]
 )

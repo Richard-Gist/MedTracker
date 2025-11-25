@@ -53,4 +53,9 @@ swift build --product MedTrackerLinux
 # CLI
 swift build --product MedTrackerCLI
 .build/debug/MedTrackerCLI
+
+# Web Server
+swift build --product MedTrackerServer
+.build/debug/MedTrackerServer
+# Open http://localhost:8080
 ```
