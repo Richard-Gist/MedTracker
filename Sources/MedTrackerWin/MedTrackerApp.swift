@@ -1,6 +1,7 @@
 import SwiftWin32
 import WinSDK
 import Foundation
+import MedTrackerCore
 
 @main
 

@@ -1,23 +1,43 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "MedTracker",
+    platforms: [
+        .macOS(.v10_15),
+    ],
     products: [
-        .executable(name: "MedTracker", targets: ["MedTracker"]),
+        .executable(name: "MedTrackerWin", targets: ["MedTrackerWin"]),
+        .executable(name: "MedTrackerLinux", targets: ["MedTrackerLinux"]),
     ],
     dependencies: [
-        .package(path: "../swift-win32")
+        .package(path: "../swift-win32"),
+        .package(url: "https://github.com/AparokshaUI/adwaita-swift", from: "0.1.0"),
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
+        .target(
+            name: "MedTrackerCore",
+            dependencies: []
+        ),
         .executableTarget(
-            name: "MedTracker",
+            name: "MedTrackerWin",
             dependencies: [
-                .product(name: "SwiftWin32", package: "swift-win32")
+                "MedTrackerCore",
+                .product(name: "SwiftWin32", package: "swift-win32", condition: .when(platforms: [.windows])),
+            ],
+            path: "Sources/MedTrackerWin"
+        ),
+        .executableTarget(
+            name: "MedTrackerLinux",
+            dependencies: [
+                "MedTrackerCore",
+                .product(name: "Adwaita", package: "adwaita-swift", condition: .when(platforms: [.linux, .macOS])),
+            ],
+            path: "Sources/MedTrackerLinux",
+            swiftSettings: [
+                .unsafeFlags(["-parse-as-library"])
             ]
         ),
     ]

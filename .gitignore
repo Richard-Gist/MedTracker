@@ -13,3 +13,6 @@ med_log.json
 # Windows
 *.exe
 *.pdb
+
+# AI Context
+.context

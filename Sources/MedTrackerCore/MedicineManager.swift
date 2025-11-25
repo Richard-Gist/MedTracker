@@ -4,7 +4,7 @@ struct MedicineLog: Codable, Sendable {
     var entries: [Date]
 }
 
-actor MedicineManager {
+public actor MedicineManager {
     private let fileName = "med_log.json"
     
     private var fileURL: URL {
@@ -35,7 +35,9 @@ actor MedicineManager {
         }
     }
     
-    func logPill() -> Bool {
+    public init() {}
+
+    public func logPill() -> Bool {
         var log = loadLog()
         let now = Date()
         
@@ -49,18 +51,18 @@ actor MedicineManager {
         return true
     }
     
-    func isTakenToday() -> Bool {
+    public func isTakenToday() -> Bool {
         let log = loadLog()
         guard let lastEntry = log.entries.last else { return false }
         return Calendar.current.isDate(lastEntry, inSameDayAs: Date())
     }
     
-    func getLastTaken() -> Date? {
+    public func getLastTaken() -> Date? {
         let log = loadLog()
         return log.entries.last
     }
     
-    func getHistory() -> [Date] {
+    public func getHistory() -> [Date] {
         return loadLog().entries.reversed()
     }
 }
