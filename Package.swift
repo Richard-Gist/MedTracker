@@ -11,6 +11,7 @@ let package = Package(
     products: [
         .executable(name: "MedTrackerWin", targets: ["MedTrackerWin"]),
         .executable(name: "MedTrackerLinux", targets: ["MedTrackerLinux"]),
+        .executable(name: "MedTrackerCLI", targets: ["MedTrackerCLI"]),
     ],
     dependencies: [
         .package(path: "../swift-win32"),
@@ -39,6 +40,11 @@ let package = Package(
             swiftSettings: [
                 .unsafeFlags(["-parse-as-library"])
             ]
+        ),
+        .executableTarget(
+            name: "MedTrackerCLI",
+            dependencies: ["MedTrackerCore"],
+            path: "Sources/MedTrackerCLI"
         ),
     ]
 )
