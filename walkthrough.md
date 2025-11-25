@@ -1,30 +1,53 @@
-# Medicine Tracker Walkthrough
+# MedTracker - Native Windows GUI Walkthrough
 
-I have upgraded the application to a **Web-based GUI**.
+This document outlines the features and usage of the Native Windows GUI version of the Medicine Tracker application, built using `SwiftWin32`.
 
-## How to Build
-Open a terminal in the `MedTracker` directory and run:
+## Features
+
+- **Native Window**: Runs as a standalone Windows application.
+- **Status Display**: Shows whether medicine has been taken today and the last taken time.
+- **Take Medicine**: A button to log medicine intake. Updates the status immediately.
+- **History**: A button to view the last 10 entries in a native Alert dialog.
+
+## Prerequisites
+
+- Swift for Windows installed.
+- `SwiftWin32` library (configured as a local dependency in this project).
+
+## Building the Application
+
+To build the application, run the following command in the project root:
+
 ```powershell
 swift build
 ```
 
-## How to Run
-1. Start the server:
-   ```powershell
-   .\.build\debug\MedTracker.exe
-   ```
-   You should see: `Starting MedTracker Web Server on http://localhost:8080`
+## Running the Application
 
-2. Open your web browser and go to:
-   **[http://localhost:8080](http://localhost:8080)**
+To run the application:
 
-## Using the App
-- **Home Page**: Shows your status for today.
-    - If you haven't taken your medicine, you'll see a big **"Take Medicine"** button.
-    - If you have, it will show **"You have taken your medicine today"** in green.
-- **History**: Click "View History" to see past records.
+```powershell
+swift run
+```
 
-## Technical Details
-- **Server**: Uses `FlyingFox` (Pure Swift HTTP Server).
-- **Frontend**: Server-Side Rendered HTML (No client-side JavaScript logic).
-- **Data**: Stored in `med_log.json`.
+Or execute the binary directly:
+
+```powershell
+.\.build\debug\MedTracker.exe
+```
+
+## Verification Results
+
+- **Build**: Successful.
+- **Launch**: Verified that the application launches without crashing.
+- **UI**:
+    - **Status Label**: Displays current status.
+    - **Take Button**: Logs medicine and updates status.
+    - **History Button**: Shows an alert with history.
+    - **Concurrency**: UI updates are safely handled on the main thread using `MainActor.run` and `Task`.
+
+## Code Structure
+
+- **MedTrackerApp.swift**: Contains the entry point (`@main`), `AppDelegate`, `SceneDelegate`, and `MedicineViewController`.
+- **MedicineManager.swift**: Handles data persistence (`med_log.json`) and business logic.
+- **Package.swift**: Configured with `SwiftWin32` dependency.

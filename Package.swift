@@ -5,8 +5,11 @@ import PackageDescription
 
 let package = Package(
     name: "MedTracker",
+    products: [
+        .executable(name: "MedTracker", targets: ["MedTracker"]),
+    ],
     dependencies: [
-        .package(url: "https://github.com/swhitty/FlyingFox.git", from: "0.14.0")
+        .package(path: "../swift-win32")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -14,7 +17,7 @@ let package = Package(
         .executableTarget(
             name: "MedTracker",
             dependencies: [
-                .product(name: "FlyingFox", package: "FlyingFox")
+                .product(name: "SwiftWin32", package: "swift-win32")
             ]
         ),
     ]
