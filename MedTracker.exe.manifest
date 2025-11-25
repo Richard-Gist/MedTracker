@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- 
+    MedTracker.exe.manifest
+    This file is an Application Manifest. It is required for Windows applications
+    to opt-in to modern behaviors, most importantly "Visual Styles" (Common Controls v6).
+    Without this, the application would look like Windows 95 (classic controls).
+-->
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
 <assemblyIdentity
     version="1.0.0.0"
@@ -7,6 +13,10 @@
     type="win32"
 />
 <description>MedTracker Application</description>
+<!-- 
+    The dependency below tells Windows to use version 6.0.0.0 of the Common Controls library.
+    This enables theming (Visual Styles) for buttons, text fields, etc.
+-->
 <dependency>
     <dependentAssembly>
         <assemblyIdentity
