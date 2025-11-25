@@ -14,7 +14,7 @@ let package = Package(
         .executable(name: "MedTrackerCLI", targets: ["MedTrackerCLI"]),
     ],
     dependencies: [
-        .package(path: "../swift-win32"),
+        .package(path: "Vendor/swift-win32"),
         .package(url: "https://github.com/AparokshaUI/adwaita-swift", from: "0.1.0"),
     ],
     targets: [

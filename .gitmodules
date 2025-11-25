@@ -1,0 +1,3 @@
+[submodule "Vendor/swift-win32"]
+	path = Vendor/swift-win32
+	url = https://github.com/compnerd/swift-win32
