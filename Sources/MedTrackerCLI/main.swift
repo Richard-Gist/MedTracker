@@ -1,6 +1,15 @@
 import Foundation
 import MedTrackerCore
 
+// main.swift (CLI)
+// This is the entry point for the Command Line Interface.
+//
+// Key Concepts:
+// 1. Top-Level Code: Unlike the GUI apps that use @main and structs, simple CLIs
+//    often use top-level executable code. The code in this file runs sequentially.
+// 2. readLine(): Standard Swift function to read input from stdin.
+// 3. exit(0): Used to terminate the process cleanly.
+
 let manager = MedicineManager()
 print("Welcome to MedTracker CLI")
 print("-----------------------")

@@ -2,6 +2,18 @@ import Adwaita
 import MedTrackerCore
 import Foundation
 
+// MedTrackerLinuxApp.swift
+// This is the entry point for the Linux version, using the Adwaita library.
+//
+// Key Concepts:
+// 1. Adwaita: A Swift wrapper for LibAdwaita/GTK4. It allows us to build GNOME apps
+//    using a declarative syntax very similar to SwiftUI.
+// 2. App Protocol: Just like SwiftUI, the entry point is a struct conforming to `App`.
+// 3. Window: We define the window and its content in the `scene` property.
+// 4. State Management: We use `@State` to manage UI updates. When `statusMessage` changes,
+//    the view automatically re-renders. This is a reactive pattern, unlike the imperative
+//    UIKit/Win32 style.
+
 @main
 struct MedTrackerLinux: App {
     let id = "com.richardgist.medtracker"
@@ -15,6 +27,7 @@ struct MedTrackerLinux: App {
 }
 
 struct ContentView: View {
+    // @State properties trigger UI updates when modified.
     @State private var statusMessage: String = "Welcome to MedTracker"
     @State private var historyMessage: String = ""
     @State private var showHistory: Bool = false

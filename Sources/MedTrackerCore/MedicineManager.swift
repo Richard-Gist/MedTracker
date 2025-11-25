@@ -1,68 +1,89 @@
 import Foundation
 
-struct MedicineLog: Codable, Sendable {
-    var entries: [Date]
-}
+// MedicineManager.swift
+// This is the core logic of the application, shared across Windows, Linux, and CLI.
+//
+// Key Concepts:
+// 1. Actor: We use an 'actor' to ensure thread safety. Since this class manages
+//    state (the medicine log) that can be accessed from multiple threads (UI, background tasks),
+//    the actor guarantees that only one method runs at a time. This avoids race conditions
+//    without needing manual locks/mutexes.
+// 2. Codable: We use Swift's Codable protocol to easily serialize the log to JSON.
+// 3. FileManager: We use standard Foundation APIs to find the Documents directory.
+//    On Windows, this maps to C:\Users\User\Documents.
+//    On Linux, this maps to /home/user/Documents (or similar).
 
 public actor MedicineManager {
-    private let fileName = "med_log.json"
-    
-    private var fileURL: URL {
-        let currentDirectory = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
-        return currentDirectory.appendingPathComponent(fileName)
-    }
-    
-    private func loadLog() -> MedicineLog {
-        do {
-            let data = try Data(contentsOf: fileURL)
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
-            return try decoder.decode(MedicineLog.self, from: data)
-        } catch {
-            return MedicineLog(entries: [])
+    private let medicineLogFileName = "med_log.json"
+    private var medicineLog: MedicineLog
+
+    public init() {
+        if let loadedLog = Self.loadMedicineLog(from: medicineLogFileName) {
+            self.medicineLog = loadedLog
+        } else {
+            self.medicineLog = MedicineLog(entries: [])
         }
     }
-    
-    private func saveLog(_ log: MedicineLog) {
-        do {
-            let encoder = JSONEncoder()
-            encoder.dateEncodingStrategy = .iso8601
-            encoder.outputFormatting = .prettyPrinted
-            let data = try encoder.encode(log)
-            try data.write(to: fileURL)
-        } catch {
-            print("Error saving log: \(error)")
-        }
-    }
-    
-    public init() {}
 
     public func logPill() -> Bool {
-        var log = loadLog()
-        let now = Date()
-        
-        // Check if already taken today
         if isTakenToday() {
             return false
         }
-        
-        log.entries.append(now)
-        saveLog(log)
+        medicineLog.entries.append(Date())
+        saveMedicineLog()
         return true
     }
-    
+
     public func isTakenToday() -> Bool {
-        let log = loadLog()
-        guard let lastEntry = log.entries.last else { return false }
-        return Calendar.current.isDate(lastEntry, inSameDayAs: Date())
+        guard let lastTaken = medicineLog.entries.last else {
+            return false
+        }
+        return Calendar.current.isDateInToday(lastTaken)
     }
-    
+
     public func getLastTaken() -> Date? {
-        let log = loadLog()
-        return log.entries.last
+        medicineLog.entries.last
     }
-    
+
     public func getHistory() -> [Date] {
-        return loadLog().entries.reversed()
+        medicineLog.entries.sorted(by: >)
     }
+
+    private func saveMedicineLog() {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        do {
+            let data = try encoder.encode(medicineLog)
+            if let url = Self.getMedicineLogURL(for: medicineLogFileName) {
+                try data.write(to: url)
+            }
+        } catch {
+            print("Error saving medicine log: \(error)")
+        }
+    }
+
+    private static func loadMedicineLog(from fileName: String) -> MedicineLog? {
+        guard let url = getMedicineLogURL(for: fileName) else { return nil }
+        do {
+            let data = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            return try decoder.decode(MedicineLog.self, from: data)
+        } catch {
+            print("Error loading medicine log: \(error)")
+            return nil
+        }
+    }
+
+    private static func getMedicineLogURL(for fileName: String) -> URL? {
+        // FileManager.default.urls(for: .documentDirectory, ...) works on both Windows and Linux.
+        // It abstracts away the platform-specific path differences.
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        return documentsDirectory.appendingPathComponent(fileName)
+    }
+}
+
+struct MedicineLog: Codable {
+    var entries: [Date]
 }

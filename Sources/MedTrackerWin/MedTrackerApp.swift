@@ -3,8 +3,18 @@ import WinSDK
 import Foundation
 import MedTrackerCore
 
-@main
+// MedTrackerApp.swift (Windows)
+// This is the entry point for the Windows version of the application.
+//
+// Key Concepts:
+// 1. SwiftWin32: A Swift wrapper around the native Win32 API. It provides UIKit-like
+//    classes (Application, Window, Button, Label) to make Windows development feel familiar to iOS devs.
+// 2. WinSDK: The raw C interface to Windows APIs. We import this if we need to call
+//    Win32 functions directly (like MessageBoxW).
+// 3. @main: The entry point. SwiftWin32 provides the `ApplicationMain` logic, but here
+//    we define the Delegate and SceneDelegate, similar to a UIKit app.
 
+@main
 final class MedTrackerAppDelegate: ApplicationDelegate {
     func application(_ application: Application, didFinishLaunchingWithOptions options: [Application.LaunchOptionsKey: Any]?) -> Bool {
         return true
@@ -25,6 +35,8 @@ final class MedTrackerSceneDelegate: SceneDelegate {
         
         let window = Window(windowScene: windowScene)
         
+        // Setting the window frame manually.
+        // Unlike iOS, Windows apps run in free-floating windows, so we define an initial size.
         var frame = window.frame
         frame.origin.x = 100
         frame.origin.y = 100
